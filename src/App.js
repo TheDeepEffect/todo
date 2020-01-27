@@ -18,9 +18,6 @@ class App extends React.Component {
         }
       ]
     };
-
-    this.inputHandleChangeCard=this.inputHandleChangeCard.bind(this);
-    this.inputBlurCard = this.inputBlurCard.bind(this);
   }
 
   componentDidMount() {
@@ -28,36 +25,12 @@ class App extends React.Component {
     this.setState({ id: Date.now() });
   }
 
-  inputBlurCard(e,id){
-    const text = e.target.value;    
-    if( text.length <=1 && this.state.length>1 )
-    {
-      
-
-      //  this.setState((state) =>(state.tasks.length>1 &&
-      //    state.tasks.splice(state.tasks.findIndex(task=>task.id===id),1)
-      //  ) );
-      //  console.log(this.state.tasks);
-       
-     }
-   }
-
-  inputHandleChangeCard(e, id) {
-    const text = e.target.value;
-    // console.log("id", id);
-    
-    //Saving input to state.
-    this.setState((state) =>
-      state.id === id &&(
-        state.title=text
-      )
-    );
-  }
 
   render() {
     const taskCards = [this.state];
     const cards = taskCards.map(card => (
-      <TaskCard 
+      <TaskCard
+          key={this.state.id} 
           cardState={this.state}
           onInputChangeCard={this.inputHandleChangeCard}
           onBlur ={this.inputBlurCard}
@@ -70,9 +43,7 @@ class App extends React.Component {
     console.log("State", this.state);
     return (
       <div className="App">
-        <ul>
           {cards}
-        </ul>
       </div>
     );
   }

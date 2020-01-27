@@ -17,13 +17,21 @@ class TaskCard extends React.Component {
   componentDidMount() {
     this.setState((state) => state.tasks.map( task => task.id=Date.now()))
   }
-     
+  
   
   checkedHandleChange(id) {
     this.setState(state =>
-      state.tasks.filter((task) => (task.id===id) && (task.isCompleted = !task.isCompleted)  )
+      state.tasks.filter((task) => (task.id===id) &&
+      (task.task !== "") &&
+      (task.isCompleted = !task.isCompleted) && 
+      (state.tasks.splice(state.tasks.findIndex(task=>task.id===id),1))
+      )
     );
+    // console.log(a,"aaaaaaaaaa");
+    
+      
   }
+
 inputFocusChangeTask(id){
       //Checking wether this is the last task input in ordr to add one.
       
@@ -40,7 +48,7 @@ inputFocusChangeTask(id){
             }
             )
         ) );
-        console.log("abcddd",this.state.tasks.indexOf(task => task.id===id));
+        // console.log("abcddd",this.state.tasks.indexOf(task => task.id===id));
       }
   
 }
@@ -55,7 +63,7 @@ inputFocusChangeTask(id){
         task =>
           task.id === id &&
           ((task.task = text),
-          (task.time = new Date().toLocaleString("en-IN", { hour12: true })))
+          (task.time = new Date().toDateString() + " "+ new Date().toLocaleTimeString() ))
       )
     );
   }
@@ -65,12 +73,16 @@ inputFocusChangeTask(id){
     if( text.length <=1 && this.state.tasks.length>1 )
     {
       console.log("onblur")
-      this.setState((state) =>(state.tasks.length>1 &&
-        state.tasks.splice(state.tasks.findIndex(task=>task.id===id),1)
-      ) );
-      console.log(this.state.tasks);
-      
+      this.setState((state) =>(state.tasks.length>1 &&(
+        state.tasks.splice(state.tasks.findIndex(task=>task.id===id),1))
+      ) );      
     }
+
+
+    this.setState(state => state.tasks.sort((a,b) =>
+    new Date(b.time) - new Date(a.time)
+     ));
+    console.log(this.state.tasks);
   }
 
   inputHandleChange(e) {
@@ -95,17 +107,16 @@ inputFocusChangeTask(id){
 
     // tasks.push
     return (
-      <li key = {this.state.id}  >
         <div className="taskCard">
-        <div className="ui cards  ">
-          <div className="card">
+        <div className="ui raised very padded text container segment  ">
+
             <div className="content">
               <div className="header">
                 <div className="ui transparent input">
                   <input
                     id="12"
                     type="text"
-                    placeholder="Title"
+                    placeholder="Title for ToDos "
                     value={this.state.title}
                     onChange={this.inputHandleChange}
                     onBlur={this.props.onBlur}
@@ -117,10 +128,9 @@ inputFocusChangeTask(id){
             <div className="content">
               <ul>{tasks}</ul>
             </div>
-          </div>
+
         </div>
       </div>
-      </li>
     );
   }
 }
